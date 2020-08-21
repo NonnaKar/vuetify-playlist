@@ -23,7 +23,9 @@
         </template>
         <span>Sort projects by person</span>
       </v-tooltip>
-
+      
+      <v-divider></v-divider>
+      
       <v-card flat class="grey lighten-4" v-for="project in projects" :key="project.title">
         <v-row row wrap :class="`rounded-0 pa-3 project ${project.status}`">
           <v-col xs="12" md="6">
