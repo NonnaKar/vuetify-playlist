@@ -25,27 +25,19 @@
                 <v-text-field label="Title" v-model="title" prepend-icon="mdi-folder"></v-text-field>
                 <v-textarea label="Information" v-model="content" prepend-icon="mdi-pencil"></v-textarea>
                 
-                <v-menu
-                v-model="due"
-                :close-on-content-click="false"
-                max-width="290"
-                >
+                <v-menu>
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        :value="computedDateFormattedDatefns"
+                        :value="due"
                         clearable
                         label="Due date"
                         prepend-icon="mdi-calendar-range"
                         readonly
                         v-bind="attrs"
                         v-on="on"
-                        @click:clear="date = null"
                         ></v-text-field>
                     </template>
-                    <v-date-picker
-                        v-model="date"
-                        @change="due = false"
-                        ></v-date-picker>
+                    <v-date-picker v-model="due"></v-date-picker>
                 </v-menu>
 
                 <v-btn text class="success mt-3" @click="submit">Add Project</v-btn>
@@ -57,25 +49,26 @@
 </template>
 
 <script>
-import { compareAsc, format } from 'date-fns'
+import format from 'date-fns/format'
+import parseISO from 'date-fns/parseISO'
 
 export default {
+    name: 'Popup',
     data() {
         return {
             title: '',
             content: '',
-            date: compareAsc(new Date().toISOString().substr(0, 10)),
-            due: false
+            due: null
         }
     },
     methods: {
-        submit() {
+        submit(){
             console.log(this.title, this.content)
         }
     },
     computed: {
-        computedDateFormattedDatefns () {
-            return this.date ? format(this.date, 'EEEE, MMMM do yyyy') : ''
+        formattedDate(){
+            return this.due ? format(parseISO(this.due), 'do MMM yyyy') : ''
         },
     }
 }
