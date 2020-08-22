@@ -28,7 +28,7 @@
                 <v-menu>
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                        :value="due"
+                        :value="formattedDate"
                         clearable
                         label="Due date"
                         prepend-icon="mdi-calendar-range"
