@@ -33,7 +33,7 @@ export default {
     data() {
         return {
             team: [
-                { name: 'The Net Ninja', role: 'Web developer' },
+                { name: 'Nonna Lisova', role: 'Web developer' },
                 { name: 'Ryu', role: 'Graphic designer' },
                 { name: 'Chun Li', role: 'Web developer' },
                 { name: 'Gouken', role: 'Social media maverick' },

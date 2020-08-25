@@ -21,13 +21,25 @@
         </v-card-title>
 
         <v-card-text>
-            <v-form class="px-3">
-                <v-text-field label="Title" v-model="title" prepend-icon="mdi-folder"></v-text-field>
-                <v-textarea label="Information" v-model="content" prepend-icon="mdi-pencil"></v-textarea>
+            <v-form class="px-3" ref="form">
+                <v-text-field 
+                label="Title" 
+                v-model="title" 
+                prepend-icon="mdi-folder"
+                :rules="inputRules"
+                ></v-text-field>
+
+                <v-textarea 
+                label="Information" 
+                v-model="content" 
+                prepend-icon="mdi-pencil"
+                :rules="inputRules"
+                ></v-textarea>
                 
                 <v-menu>
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field
+                        :rules="inputRules"
                         :value="formattedDate"
                         clearable
                         label="Due date"
@@ -40,7 +52,13 @@
                     <v-date-picker v-model="due"></v-date-picker>
                 </v-menu>
 
-                <v-btn text class="success mt-3" @click="submit">Add Project</v-btn>
+                <v-btn 
+                text 
+                class="success mt-3" 
+                @click="submit"
+                :loading="loading">
+                Add Project
+                </v-btn>
             </v-form>
         </v-card-text>
       </v-card>
@@ -51,6 +69,7 @@
 <script>
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
+import db from '@/fb'
 
 export default {
     name: 'Popup',
@@ -58,12 +77,33 @@ export default {
         return {
             title: '',
             content: '',
-            due: null
+            due: null,
+            inputRules: [
+                v => v.length >= 3 || 'Minimum length is 3 characters'
+            ],
+            loading: false,
+            dialog: false
         }
     },
     methods: {
         submit(){
-            console.log(this.title, this.content)
+            if(this.$refs.form.validate()){
+                this.loading = true;
+
+                const project = {
+                    title: this.title,
+                    content: this.content,
+                    due: format(parseISO(this.due), "do MMM YYY"),
+                    person: 'Nonna Lisova',
+                    status: 'ongoing'
+                }
+
+                db.collection('project-vutify').add(project).then(() => {
+                    this.loading = false;
+                    this.dialog = false;
+                    this.$emit('projectAdded')
+                })
+            }
         }
     },
     computed: {
